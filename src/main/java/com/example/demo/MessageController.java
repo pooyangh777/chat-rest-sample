@@ -31,7 +31,6 @@ public class MessageController {
         SendMessageRequest req = new SendMessageRequest.Builder()
                 .setMessage(message)
                 .setThreadId(threadId)
-                .setMessageType(1)
                 .setSubjectId(threadId)
                 .build();
         String uniqueId = DemoApplication.chatManager.chat.sendTextMessage2(req);
