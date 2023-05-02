@@ -6,9 +6,7 @@ import chatSdk.dataTransferObject.message.inPut.MessageVO;
 import chatSdk.dataTransferObject.message.inPut.ResultNewMessage;
 import chatSdk.dataTransferObject.message.outPut.SendMessageRequest;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -16,9 +14,19 @@ import java.util.concurrent.Executors;
 @RestController
 @RequestMapping("/message")
 public class MessageController {
-    @RequestMapping(value = "/send")
+    @GetMapping(value = "/send")
     @Async
-    public CompletableFuture<MessageVO> sendMessage(@RequestParam(value = "message") String message, @RequestParam(value = "threadId") Long threadId) {
+    public CompletableFuture<MessageVO> send(@RequestParam(value = "message") String message, @RequestParam(value = "threadId") Long threadId) {
+        return sendMessage(message, threadId);
+    }
+
+    @PostMapping("/send")
+    @Async
+    public CompletableFuture<MessageVO> send(@RequestBody MessageRequest request) {
+        return sendMessage(request.getMessage(), request.getThreadId());
+    }
+
+    private CompletableFuture<MessageVO> sendMessage(String message, Long threadId){
         CompletableFuture<MessageVO> completableFuture = new CompletableFuture<>();
         SendMessageRequest req = new SendMessageRequest.Builder()
                 .setMessage(message)

@@ -17,7 +17,6 @@ public class ChatManager implements ChatListener {
     public static String platformHost = "https://sandbox.pod.ir:8043";
     public static String socketAddress = "wss://msg.pod.ir/ws";
     public static String token = "90c2a567ec85476dad8defc550371ea9.XzIwMjM0";
-    //    "63b9aa126f814222bec6004663de3cc9"
     public static String ssoHost = "http://172.16.110.235";
     public static String fileServer = "https://core.pod.ir";
     public static String serverName = "chatlocal";
@@ -55,8 +54,7 @@ public class ChatManager implements ChatListener {
         ChatConfig chatConfig = ChatConfig.builder()
                 .asyncConfig(asyncConfig)
                 .severName(serverName)
-                .token("7add871300a84d63b410c3c88c715743.XzIwMjM0")
-//        "84831a17a1f94f4683b783470ae21d41.XzIwMjIxMg"
+                .token(token)
                 .chatId(chatId)
                 .fileServer(fileServer)
                 .ssoHost(ssoHost)
