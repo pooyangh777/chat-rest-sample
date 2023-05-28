@@ -48,6 +48,8 @@ public class ChatManager implements ChatListener {
                 .ssoHost(appProperties.getSsoHost())
                 .platformHost(appProperties.getPlatformHost())
                 .isLoggable(appProperties.getIsLoggable())
+                .maxReconnectCount(appProperties.getMaxReconnectCount())
+                .reconnectInterval(appProperties.getReconnectInterval())
                 .build();
         System.out.println("token is " + appProperties.getToken());
         try {
@@ -68,7 +70,7 @@ public class ChatManager implements ChatListener {
         if (chatState == ChatState.ChatReady) {
             System.out.println("Chat is ready.");
         } else {
-            System.out.println("Chat state is not ready.");
+            System.out.println("Chat state is " + chatState.toString());
         }
     }
 

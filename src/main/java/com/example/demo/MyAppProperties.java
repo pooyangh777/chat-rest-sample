@@ -21,6 +21,8 @@ public class MyAppProperties {
     private Boolean isLoggable = false;
     private String appId = "PodChat";
     private Long chatId;
+    private int maxReconnectCount = 5;
+    private Long reconnectInterval = 5000L;
 
     public String getPlatformHost() {
         return platformHost;
@@ -164,5 +166,21 @@ public class MyAppProperties {
 
     public void setChatId(Long chatId) {
         this.chatId = chatId;
+    }
+
+    public int getMaxReconnectCount() {
+        return maxReconnectCount;
+    }
+
+    public void setMaxReconnectCount(int maxReconnectCount) {
+        this.maxReconnectCount = maxReconnectCount;
+    }
+
+    public Long getReconnectInterval() {
+        return reconnectInterval;
+    }
+
+    public void setReconnectInterval(Long reconnectInterval) {
+        this.reconnectInterval = reconnectInterval;
     }
 }
