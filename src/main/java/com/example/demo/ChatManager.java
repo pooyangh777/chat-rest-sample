@@ -77,7 +77,9 @@ public class ChatManager implements ChatListener {
     @Override
     public void onChatState(ChatState chatState) {
         if (chatState == ChatState.ChatReady) {
-            System.out.println("Chat Is Ready");
+            System.out.println("Chat is ready.");
+        } else {
+            System.out.println("Chat state is not ready.");
         }
     }
 
