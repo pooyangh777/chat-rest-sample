@@ -13,54 +13,43 @@ import chatSdk.dataTransferObject.system.outPut.ErrorOutPut;
 import java.util.HashMap;
 
 public class ChatManager implements ChatListener {
+    private MyAppProperties appProperties;
     Chat chat;
-    public static String platformHost = "https://sandbox.pod.ir:8043";
-    public static String socketAddress = "wss://msg.pod.ir/ws";
-    public static String token = "eb019944f92f449e82cbba5e771740db.XzIwMjM1";
-    public static String ssoHost = "http://172.16.110.235";
-    public static String fileServer = "https://core.pod.ir";
-    public static String serverName = "chatlocal";
-    public static String socketServerName = "chat-server";
-    public static String queueServer = "192.168.112.23";
-    public static String queuePort = "61616";
-    public static String queueInput = "queue-in-chat-dotnet-local";
-    public static String queueOutput = "queue-out-chat-dotnet-local";
-    public static String queueUserName = "root";
-    public static String queuePassword = "j]Bm0RU8gLhbPUG";
-    public static Long chatId = 4101L;
     public HashMap<String, MessageListener> listenerMaps = new HashMap<>();
 
-    public ChatManager() {
+
+    public ChatManager(MyAppProperties appProperties) {
+        this.appProperties = appProperties;
         init();
     }
 
     void init() {
-        boolean isSocket = true;
-        String serverName = isSocket ? socketServerName : this.serverName;
+        String serverName = appProperties.getIsSocket() ? appProperties.getSocketServerName() : appProperties.getServerName();
         AsyncConfig asyncConfig = AsyncConfig
                 .builder()
-                .isSocketProvider(isSocket)
-                .socketAddress(socketAddress)
+                .isSocketProvider(appProperties.getIsSocket())
+                .socketAddress(appProperties.getSocketAddress())
                 .serverName(serverName)
-                .queuePassword(queuePassword)
-                .queueUserName(queueUserName)
-                .queueInput(queueInput)
-                .queueOutput(queueOutput)
-                .queueServer(queueServer)
-                .queuePort(queuePort)
-                .isLoggable(true)
-                .appId("PodChat")
+                .queuePassword(appProperties.getQueuePassword())
+                .queueUserName(appProperties.getQueueUserName())
+                .queueInput(appProperties.getQueueInput())
+                .queueOutput(appProperties.getQueueOutput())
+                .queueServer(appProperties.getQueueServer())
+                .queuePort(appProperties.getQueuePort())
+                .isLoggable(appProperties.getIsLoggable())
+                .appId(appProperties.getAppId())
                 .build();
         ChatConfig chatConfig = ChatConfig.builder()
                 .asyncConfig(asyncConfig)
                 .severName(serverName)
-                .token(token)
-                .chatId(chatId)
-                .fileServer(fileServer)
-                .ssoHost(ssoHost)
-                .platformHost(platformHost)
-                .isLoggable(true)
+                .token(appProperties.getToken())
+                .chatId(appProperties.getChatId())
+                .fileServer(appProperties.getFileServer())
+                .ssoHost(appProperties.getSsoHost())
+                .platformHost(appProperties.getPlatformHost())
+                .isLoggable(appProperties.getIsLoggable())
                 .build();
+        System.out.println("token is " + appProperties.getToken());
         try {
             chat = Chat.init(chatConfig, this);
             chat.connect();
@@ -93,7 +82,7 @@ public class ChatManager implements ChatListener {
         ChatListener.super.onNewMessage(response);
         String uniqueId = response.getResult().getUniqueId();
         MessageListener listener = listenerMaps.get(uniqueId);
-        if (listener != null){
+        if (listener != null) {
             listener.onNewMessage(response);
             listenerMaps.remove(uniqueId);
         }
