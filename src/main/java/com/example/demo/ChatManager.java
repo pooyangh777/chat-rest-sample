@@ -7,7 +7,7 @@ import chatSdk.chat.listeners.MessageListener;
 import chatSdk.dataTransferObject.ChatResponse;
 import chatSdk.dataTransferObject.chat.ChatConfig;
 import chatSdk.dataTransferObject.chat.ChatState;
-import chatSdk.dataTransferObject.message.inPut.ResultNewMessage;
+import chatSdk.dataTransferObject.message.inPut.Message;
 import chatSdk.dataTransferObject.system.outPut.ErrorOutPut;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class ChatManager implements ChatListener {
     Chat chat;
     public static String platformHost = "https://sandbox.pod.ir:8043";
     public static String socketAddress = "wss://msg.pod.ir/ws";
-    public static String token = "90c2a567ec85476dad8defc550371ea9.XzIwMjM0";
+    public static String token = "eb019944f92f449e82cbba5e771740db.XzIwMjM1";
     public static String ssoHost = "http://172.16.110.235";
     public static String fileServer = "https://core.pod.ir";
     public static String serverName = "chatlocal";
@@ -76,7 +76,9 @@ public class ChatManager implements ChatListener {
 
     @Override
     public void onChatState(ChatState chatState) {
-
+        if (chatState == ChatState.ChatReady) {
+            System.out.println("Chat Is Ready");
+        }
     }
 
     @Override
@@ -85,12 +87,12 @@ public class ChatManager implements ChatListener {
     }
 
     @Override
-    public void onNewMessage(String content, ChatResponse<ResultNewMessage> response) {
-        ChatListener.super.onNewMessage(content, response);
-        String uniqueId = response.getResult().getMessageVO().getUniqueId();
+    public void onNewMessage(ChatResponse<Message> response) {
+        ChatListener.super.onNewMessage(response);
+        String uniqueId = response.getResult().getUniqueId();
         MessageListener listener = listenerMaps.get(uniqueId);
         if (listener != null){
-            listener.onNewMessage(content, response);
+            listener.onNewMessage(response);
             listenerMaps.remove(uniqueId);
         }
     }
