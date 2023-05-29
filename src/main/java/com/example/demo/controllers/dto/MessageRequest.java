@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.controllers.dto;
 
 public class MessageRequest {
     private String message;

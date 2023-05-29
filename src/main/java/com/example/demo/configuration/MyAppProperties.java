@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -21,8 +21,9 @@ public class MyAppProperties {
     private Boolean isLoggable = false;
     private String appId = "PodChat";
     private Long chatId;
-    private int maxReconnectCount = 5;
+    private Long maxReconnectCount = 5L;
     private Long reconnectInterval = 5000L;
+    private Long asyncCheckConnectionLastMessageInterval = 5000L;
 
     public String getPlatformHost() {
         return platformHost;
@@ -168,11 +169,11 @@ public class MyAppProperties {
         this.chatId = chatId;
     }
 
-    public int getMaxReconnectCount() {
+    public Long getMaxReconnectCount() {
         return maxReconnectCount;
     }
 
-    public void setMaxReconnectCount(int maxReconnectCount) {
+    public void setMaxReconnectCount(Long maxReconnectCount) {
         this.maxReconnectCount = maxReconnectCount;
     }
 
@@ -182,5 +183,13 @@ public class MyAppProperties {
 
     public void setReconnectInterval(Long reconnectInterval) {
         this.reconnectInterval = reconnectInterval;
+    }
+
+    public Long getAsyncCheckConnectionLastMessageInterval() {
+        return asyncCheckConnectionLastMessageInterval;
+    }
+
+    public void setAsyncCheckConnectionLastMessageInterval(Long asyncCheckConnectionLastMessageInterval) {
+        this.asyncCheckConnectionLastMessageInterval = asyncCheckConnectionLastMessageInterval;
     }
 }

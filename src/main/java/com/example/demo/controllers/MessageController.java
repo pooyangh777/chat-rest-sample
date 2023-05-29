@@ -1,9 +1,11 @@
-package com.example.demo;
+package com.example.demo.controllers;
 
 import chatSdk.chat.listeners.MessageListener;
 import chatSdk.dataTransferObject.ChatResponse;
 import chatSdk.dataTransferObject.message.inPut.Message;
 import chatSdk.dataTransferObject.message.outPut.SendMessageRequest;
+import com.example.demo.Application;
+import com.example.demo.controllers.dto.MessageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +33,9 @@ public class MessageController {
                 .setMessage(message)
                 .setThreadId(threadId)
                 .build();
-        String uniqueId = DemoApplication.chatManager.chat.sendTextMessage(req);
+        String uniqueId = Application.chatManager.chat.sendTextMessage(req);
         Executors.newCachedThreadPool().submit(() -> {
-            DemoApplication.chatManager.listenerMaps.put(uniqueId, new MessageListener() {
+            Application.chatManager.listenerMaps.put(uniqueId, new MessageListener() {
                 @Override
                 public void onNewMessage(ChatResponse<Message> response) {
                     completableFuture.complete(response.getResult());

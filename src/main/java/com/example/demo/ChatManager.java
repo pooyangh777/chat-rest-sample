@@ -3,20 +3,23 @@ package com.example.demo;
 import asyncSdk.AsyncConfig;
 import chatSdk.chat.Chat;
 import chatSdk.chat.ChatListener;
+import chatSdk.chat.listeners.Listener;
 import chatSdk.chat.listeners.MessageListener;
+import chatSdk.chat.listeners.ThreadListener;
 import chatSdk.dataTransferObject.ChatResponse;
 import chatSdk.dataTransferObject.chat.ChatConfig;
 import chatSdk.dataTransferObject.chat.ChatState;
 import chatSdk.dataTransferObject.message.inPut.Message;
 import chatSdk.dataTransferObject.system.outPut.ErrorOutPut;
+import chatSdk.dataTransferObject.thread.inPut.Conversation;
+import com.example.demo.configuration.MyAppProperties;
 
 import java.util.HashMap;
 
 public class ChatManager implements ChatListener {
-    private MyAppProperties appProperties;
-    Chat chat;
-    public HashMap<String, MessageListener> listenerMaps = new HashMap<>();
-
+    private final MyAppProperties appProperties;
+    public Chat chat;
+    public HashMap<String, Listener> listenerMaps = new HashMap<>();
 
     public ChatManager(MyAppProperties appProperties) {
         this.appProperties = appProperties;
@@ -38,6 +41,9 @@ public class ChatManager implements ChatListener {
                 .queuePort(appProperties.getQueuePort())
                 .isLoggable(appProperties.getIsLoggable())
                 .appId(appProperties.getAppId())
+                .checkConnectionLastMessageInterval(appProperties.getAsyncCheckConnectionLastMessageInterval())
+                .maxReconnectCount(appProperties.getMaxReconnectCount())
+                .reconnectInterval(appProperties.getReconnectInterval())
                 .build();
         ChatConfig chatConfig = ChatConfig.builder()
                 .asyncConfig(asyncConfig)
@@ -83,9 +89,20 @@ public class ChatManager implements ChatListener {
     public void onNewMessage(ChatResponse<Message> response) {
         ChatListener.super.onNewMessage(response);
         String uniqueId = response.getResult().getUniqueId();
-        MessageListener listener = listenerMaps.get(uniqueId);
-        if (listener != null) {
-            listener.onNewMessage(response);
+        Listener listener = listenerMaps.get(uniqueId);
+        if (listener instanceof MessageListener) {
+            ((MessageListener) listener).onNewMessage(response);
+            listenerMaps.remove(uniqueId);
+        }
+    }
+
+    @Override
+    public void onGetThread(ChatResponse<Conversation[]> response) {
+        ChatListener.super.onGetThread(response);
+        String uniqueId = response.getUniqueId();
+        Listener listener = listenerMaps.get(uniqueId);
+        if (listener instanceof ThreadListener) {
+            ((ThreadListener) listener).onGetThread(response);
             listenerMaps.remove(uniqueId);
         }
     }
